@@ -1,0 +1,67 @@
+{% extends 'shelf/base.html' %}
+
+{% block body %}
+
+{% if messages %}
+   
+ 
+   
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}" role="alert">
+ <strong>Message:</strong> {{ message }}
+ <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+   <span aria-hidden="true">&times;</span>
+ </button>
+ </div> 
+
+  
+{% endfor %}
+
+{% endif %}
+<div class="card">
+         
+    <!-- /.card-header -->
+    <div class="card-body">
+
+
+<table id="example2" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>Books</th>
+    <th>Reserved Date</th>
+   
+     
+     
+      <th>Action</th>
+      
+    </tr>
+    </thead>
+    <tbody>
+        {% for book in students %}
+                    <tr>
+                    <td>{{book.reserved_book.title}}</td>
+                    <td>{{book.reserved_date}}</td>
+                   
+                   
+                   
+                    <td>
+                       <a href="{% url 'users:cancel' book.id %}" class="btn btn-danger">Cancel</a> 
+                       
+                    </td>
+                    
+                  
+                 
+                    
+                
+                </tr>
+                {% endfor %}
+ 
+  </table>
+
+
+</div>
+</div>
+
+
+
+{% endblock %}

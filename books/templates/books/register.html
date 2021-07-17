@@ -1,0 +1,32 @@
+{% extends 'shelf/base.html' %}
+    {% block body %}
+    {% load crispy_forms_tags %}
+            <div class="container" style="padding-top: 20px;" id="shelfregister">
+                <div class="row">
+                    <div class="col-md-2">
+
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-body register-card-body">
+                                <h4 class="login-box-msg">Register book </h4>
+                                <form method = "POST">
+                            
+                                {% csrf_token %}
+                                {{ form|crispy }}
+                                    
+
+                                 <button type="submit" class="btn btn-success">Add Book</button>
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+
+                    </div>
+                    
+                </div>
+            </div> 
+{% endblock %}

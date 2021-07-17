@@ -1,0 +1,76 @@
+{% extends 'shelf/base.html' %}
+
+
+
+
+
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Reserved Books:</h1>
+        </div>
+        <div class="col">
+            
+
+        </div>
+    </div>
+    
+</div>
+<div class="card">
+        
+    <!-- /.card-header -->
+    <div class="card-body">
+
+<table id="example2" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>Books</th>
+    <th>Reserved By</th>
+    <th> Reserved Date </th>
+   
+     
+     
+      <th>Action</th>
+      
+    </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+                    <tr>
+                    <td>{{book.reserved_book.title}}</td>
+                    <td>{{book.reserved_by.user.first_name}} {{book.reserved_by.user.last_name}}</td>
+                    <td>{{book.reserved_date}}</td>
+                   
+                   
+                   
+                    <td>
+                       <a href="{% url 'books:issue' book.id %}" class="btn btn-danger">Issue Book</a> 
+                       
+                    </td>
+                    
+                  
+                 
+                    
+                
+                </tr>
+                {% endfor %}
+ 
+  </table>
+</div>
+</div>
+
+
+
+
+
+
+
+{% endblock %}
+
+
+
+
+

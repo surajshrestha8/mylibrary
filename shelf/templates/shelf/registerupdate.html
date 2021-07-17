@@ -1,0 +1,36 @@
+{% extends 'shelf/base.html' %}
+
+
+
+
+
+
+{% block body %}    
+
+<div class="card-body" >
+
+<div class="col-md-4"></div>
+<div class="col-md-4" style="background-color: aliceblue; padding: 20px;" >
+
+<h5>Update copies</h5>
+
+<form method="POST" action="{% url 'shelf:registerupdate' register.id %}">
+    {% csrf_token %}
+    
+    <input type="number" min="0" required name="number_of_copies"  value="{{register.number_of_copies}}" class="form-control">
+<hr>
+<button type="submit" class="btn btn-success">Save</button>
+
+</form>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+{% endblock %}

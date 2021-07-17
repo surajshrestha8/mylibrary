@@ -1,0 +1,54 @@
+{% extends 'shelf/base.html' %}
+
+
+
+
+
+{% block body %}
+
+<!-- 
+<form method="post" action="{% url 'books:issue' book.id %}">
+    {% csrf_token %}
+    <select class="form-select" aria-label="Default select example">
+        <option selected>Open this select menu</option>
+       
+       {% for i in copy %}
+        <option value="1">{{i.shelf}}</option>
+       {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-primary">Issue</button>
+
+</form> -->
+<form method="POST" action="{% url 'books:issue' book.id %}">
+    <div class="card-body">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="shelf_id">Shelf</label>
+        <select  class="form-control" name="shelf_id" placeholder="select a shelf" required>
+          <option value="" disabled selected hidden>select a shelf</option>
+          {% for shelf in copy %}
+          <option value="{{shelf.shelf.id}}"  style="padding: 20px;">{{shelf.shelf}}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+
+
+       <div class="card-footer">
+        <button type="submit" class="btn btn-success">Confirm</button>
+      </div>
+    </div>
+    <!-- /.card-body -->
+  </form>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

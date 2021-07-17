@@ -1,0 +1,57 @@
+{% extends 'shelf/base.html' %}
+    {% block body %}
+
+    {% if messages %}
+    <ul class="messages">
+ 
+   
+         {% for message in messages %}
+         <li{% if message.tags %} class="{{ message.tags }}"{% endif %}></li>{{ message }}</li>
+         
+           
+         {% endfor %}
+         </ul>
+    {% endif %}
+      
+     <div class="container">
+         <div class="row">
+             <div class="col">
+                 <h1>Managed Books and Shelf</h1>
+             </div>
+             <div class="col">
+ 
+             </div>
+         </div>
+         
+     </div>
+ 
+     
+     <div class="card">
+         
+        <!-- /.card-header -->
+        <div class="card-body">
+          <table id="example2" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <th>ID</th>
+             
+            </tr>
+            </thead>
+            <tbody>
+                {% for m in manage %}
+                            <tr>
+                            <td>{{m.id}}</td>
+                           
+                           
+                           
+                           
+                        
+                        </tr>
+                {% endfor %}
+         
+          </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+
+      {% endblock %}

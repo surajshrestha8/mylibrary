@@ -1,0 +1,243 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Library | Registration Page</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+
+<body class="hold-transition register-page">
+   
+  <div class="row">
+
+  </div>
+
+  <div class="row">      
+    
+  
+  <div class="register-box">
+      <div class="register-logo">
+        <a href="../../index2.html"></a><b>My</b>Library
+      </div>
+    
+
+          
+            <div class="card">
+                <div class="card-body register-card-body">
+                  <h3 class="login-box-msg">Register a new Student</h3>
+                  <hr>
+            <div class="form-group">
+            
+                <form method="post">
+                  
+                    {% csrf_token %}
+
+                    {% load crispy_forms_tags %}
+                 
+                  
+                    
+                    
+                    <div class="form-row">
+                      <div class="form-group col-md-12 mb-0">
+                        {{ form.username|as_crispy_field }}
+                      </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group col-md-12 mb-0">
+                          {{ form.email|as_crispy_field }}
+                        </div>
+                        </div>
+                        <div class="form-row">
+                          <div class="form-group col-md-6 mb-0">
+                            {{ form.first_name|as_crispy_field }}
+                          </div>
+                        
+                        
+                            <div class="form-group col-md-6 mb-0">
+                              {{ form.last_name|as_crispy_field }}
+                            </div>
+                            </div>
+                            <div class="form-row">
+                              <div class="form-group col-md-12 mb-0">
+                                {{ form.password1|as_crispy_field }}
+                                </div>
+
+                              </div>
+                              <div class="form-row">
+                                <div class="form-group col-md-12 mb-0">
+                                  {{ form.password2|as_crispy_field }}
+                                </div>
+                                </div>
+                      
+                                <div class="form-row">
+                                  <div class="form-group col-md-6 mb-0">
+                                    {{student_form.gender|as_crispy_field }}
+                                  </div>
+                                  </div>
+                                  <div class="form-row">
+                                    <div class="form-group col-md-6 mb-0">
+                                      {{ student_form.faculty|as_crispy_field }}
+                                    </div>
+                                      </div>
+                                     
+                      
+                     
+                         
+                    
+
+                    
+
+                    <button type ="submit" class="btn btn-primary" onclick="reg()">Register</button>
+                
+                </form>
+                
+            </div>
+        </div>
+        </div>
+            
+        </div>
+       
+
+
+</body>
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+
+<script type="text/javascript">
+
+
+function reg()
+{ 
+var firstName = document.getElementById('Fname').value;
+var lastName = document.getElementById('Lname').value;
+var email = document.getElementById('email').value;
+var mobile = document.getElementById('mobile').value;
+var userName = document.getElementById('username').value;
+var userPass = document.getElementById('user_pass').value;
+var confirmPass = document.getElementById('confirm_pass').value;
+// regex
+var regCapital = /^[A-Z]/;
+var regSpace = /^(\w+\s?)*\s*$/g;
+var regMoreCap = /\w*[A-Z]\w*[A-Z]\w*/;
+var regEmail = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
+// --------------------------- FIRST NAME VALIDATION -------------------------------------------------
+// validation firstname for characters
+if (typeof firstName !== "string" ||/[!\@\#\$\%\^\&\*0-9]+/.test(firstName))
+{
+document.getElementById('first_error').innerHTML = "Firstname must contain only characters.";
+firstName.focus();
+}
+
+// validation firstname for capital letter on first character
+if (regCapital.test(firstName)==false)
+{
+document.getElementById('first_error').innerHTML = "First character must be in uppercase";
+firstName.focus();
+}
+
+// checking if first name has more than one character
+if (regMoreCap.test(firstName))
+{
+document.getElementById('first_error').innerHTML = "Only the first character can be in uppercase";
+firstName.focus();
+}
+
+// --------------------------- LAST NAME VALIDATION -------------------------------------------------
+// validation lastname for characters
+if (typeof lastName !== "string" ||/[!\@\#\$\%\^\&\*0-9]+/.test(lastName))
+{
+document.getElementById('last_error').innerHTML = "Lastname must contain only characters.";
+lastName.focus();
+}
+
+// validation lastname for capital letter on first character
+if (regCapital.test(lastName) == false)
+{
+document.getElementById('last_error').innerHTML = "First character must be in uppercase";
+lastName.focus();
+}
+
+// checking if last name has more than one character
+if (regMoreCap.test(lastName))
+{
+document.getElementById('last_error').innerHTML = "Only the first character can be in uppercase";
+lastName.focus();
+}
+
+// ---------------------------  EMAIL VALIDATION -------------------------------------------------
+// //checking for valid email
+//   if(regEmail.test (email)){
+//     document.getElementById('email_error').innerHTML = "please enter valid emali : @ missing;
+//     email.focus();
+//   } 
+
+
+// ---------------------------  MOBILE VALIDATION -------------------------------------------------
+//checking for character in mobile number
+if(/[A-Z a-z]/.test (mobile)){
+document.getElementById('mobile_error').innerHTML = "please enter valid mobile number";
+mobile.focus();
+} 
+
+// checking the length of mobile number 
+if(mobile.length!== 10)
+{
+document.getElementById('mobile_error').innerHTML = "please check number fo digits in provided number";
+mobile.focus();
+} 
+
+// ---------------------------  PASSWORD VALIDATION -------------------------------------------------
+if(userPass.length < 8)
+{
+ document.getElementById('password_error').innerHTML = "password length must be of atleast 8 characters";
+ userPass.focus();
+} 
+
+if(userPass.search(/[0-9]/) == -1) 
+{
+document.getElementById('password_error').innerHTML = "password must contain atleast one number";
+ userPass.focus();
+}
+
+if(userPass.search(/[A-Z]/) == -1) 
+{
+document.getElementById('password_error').innerHTML = "password must contain atleast one Uppercase letter";
+ userPass.focus();
+}
+
+if(userPass.search(/[!\@\#\$\%\^\&\*]/) == -1) 
+{
+document.getElementById('password_error').innerHTML = "password must contain atleast one special character";
+ userPass.focus();
+}   
+
+// ---------------------------  CONFIRM PASSWORD VALIDATION -------------------------------------------------
+
+if(confirmPass !== userPass ) 
+{
+document.getElementById('confirm_error').innerHTML = "password not matching";
+confirmPass.focus();
+}
+return true;
+}   
+
+</script>
+</html>
+
+
+

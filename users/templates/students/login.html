@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Library | Registration Page</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+</head>
+{% if messages %}
+
+
+
+  
+{% for message in messages %}
+
+<div class="card-body">
+
+
+<div class="alert alert-{{ message.tags }}" role="alert">
+  <strong>Message:</strong> {{ message }}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+</div>
+
+
+
+  
+{% endfor %}
+
+{% endif %}
+<body class="hold-transition register-page">
+    <div class="register-box">
+      <div class="register-logo">
+        <a href="../../index2.html"><b>My</b>Library</a>
+      </div>
+<!--     
+<div class="container" style="padding-top: 20px;">
+    <div class="row">
+      <div class="col-md-2"></div>
+        <div class="col-md-8"> -->
+            <div class="card">
+                <div class="card-body register-card-body">
+                  <h3 class="login-box-msg">Login</h3>
+                  
+            <div class="form-group">
+            
+                <form method="post">
+                    {% csrf_token %}
+                    {% load crispy_forms_tags %}
+                  
+                    <hr>
+<!--                     
+                    <fieldset class="form-group"> -->
+                    
+                        {{ form|crispy }}
+                        
+                       
+                        
+                      
+                      </div>
+                   
+                         
+                      {% for error in form.errors %}
+                        {{error}}
+                    {% endfor %}
+
+                    
+
+                    <button type ="submit" class="btn btn-primary">Login</button>
+                  </fieldset>
+                
+                </form>
+                <hr>
+                <h5> Dont have account? </h5>
+                <a href="{% url 'users:create' %}">Register</a>
+            
+        </div>
+        </div>
+            
+        </div>
+        <div class="col">
+
+        </div>
+    </div>
+</div>
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+</body>
+</html>
+
+
+

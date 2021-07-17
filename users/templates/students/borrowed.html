@@ -1,0 +1,71 @@
+{% extends 'shelf/base.html' %}
+
+
+
+{% block body %}
+
+<div class="container">
+  <div class="row">
+      <div class="col">
+          <h1>Issued Books:</h1>
+      </div>
+      <div class="col">
+          
+
+      </div>
+  </div>
+  
+</div>
+
+<div class="card">
+        
+  <!-- /.card-header -->
+  <div class="card-body">
+<table id="example2" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>Books</th>
+    <th>Issued Date</th>
+    <th>Return Date</th>
+   
+     
+     
+    
+      
+    </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+                    <tr>
+                    <td>{{book.book.title}}</td>
+                    <td>{{book.issue_date}}</td>
+                   
+                   
+                   
+                    <td>    
+                       {{book.return_date}}
+                       
+                    </td>
+                   
+             
+                
+                </tr>
+                {% endfor %}
+ 
+  </table>
+  <hr>
+  {% if total_amount %}
+  <div class="float-right">
+  <h4 style="color:red">Fine amount: Rs. {{total_amount}}</h4>
+  <a href="{% url 'users:fine' %}" class="btn btn-warning float-right">Fine Details</a>
+  </div>
+  {% else %}
+  <p style="color:green; margin-top: 10px; " class="float-right" >You dont have any pending fine</p>
+  {%  endif %}
+</div>
+</div>
+
+
+
+
+{% endblock %}

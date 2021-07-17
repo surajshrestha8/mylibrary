@@ -1,0 +1,189 @@
+{% extends 'shelf/base.html' %}
+    {% block body %}
+
+    {% if messages %}
+   
+ 
+   
+         {% for message in messages %}
+         <div class="card-body">
+          
+
+          
+         
+         <div class="alert alert-{{ message.tags }}" role="alert">
+          <strong>Message:</strong> {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          </div> 
+       
+        </div>
+         
+           
+         {% endfor %}
+        
+    {% endif %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+
+      $(document).ready( function() {
+      
+          var dtToday = new Date();
+      
+          var minMonth = dtToday.getMonth() + 1;
+          var maxMonth = dtToday.getMonth() + 3;
+          var day = dtToday.getDate();
+          var year = dtToday.getFullYear();
+      
+          if(minMonth < 10)
+              minMonth = '0' + minMonth.toString();
+          if(maxMonth < 10)
+              maxMonth = '0' + maxMonth.toString();
+          if(day < 10)
+              day = '0' + day.toString();
+      
+          var minDate = year + '-' + minMonth + '-' + day; 
+          var maxDate = year + '-' + maxMonth + '-' + day; 
+      
+          $('.reserve_date').attr('min', minDate);
+          $('.reserve_date').attr('max', maxDate);
+      
+      });
+      
+      </script>
+      
+     <div class="container">
+         <div class="row">
+             <div class="col">
+                 <h1>Books:</h1>
+             </div>
+             <div class="col">
+ 
+             </div>
+         </div>
+         
+     </div>
+ 
+ 
+ 
+ 
+     <div class="card">
+       
+      
+      
+      <div class="card-body">
+
+      
+      
+      <form method="GET" action="{% url 'books:index' %}">
+      
+        <div class="form-row">
+          <div class="col-md-2 mb-2">
+            
+            <input type="text" class="form-control" id="title" placeholder="Book title" name="title">
+          </div>
+          <div class="col-md-2 mb-2">
+           
+            <input type="text" class="form-control" id="author" placeholder="Author" name="author">
+          </div>
+         
+          <div class="col-md-2 mb-2">
+           
+            <input type="text" class="form-control" id="publisher" placeholder="Publisher" name="publisher">
+          </div>
+          <div class="col-md-2 mb-2">
+            
+            <select class="form-control" name="shelf" id="shelf">
+              <option selected >Choose a shelf</option>
+              {% for shelf in shelves %}
+              <option value="{{shelf.id}}">{{shelf.shelf_name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-2 mb-2">
+            <button class="btn btn-primary">Search</button>
+          </div>
+        </div>
+        
+        
+       </form>
+      </div>
+         
+         <!-- /.card-header -->
+         <div class="card-body">
+           <table id="example2" class="table table-bordered table-hover table-repsonsive">
+             <thead>
+             <tr>
+               <th>ID</th>
+               <th>Title</th>
+               <th>Author</th>
+             
+              
+               <th>Publisher</th>
+               <th>Action</th>
+               
+             </tr>
+             </thead>
+             <tbody>
+                 {% for book in books %}
+                             <tr>
+                             <td>{{book.id}}</td>
+                             <td>{{book.title}}</td>
+                             <td>{{book.author}}</td>
+                             
+                             
+                             <td>{{book.publisher}}</td>
+                             {% if user.is_admin or user.is_superuser %}
+                             <td>
+                                <a href="{% url 'books:detail' book.id %}" class="btn btn-primary">View</a> 
+                                <a href="{% url 'books:update' book.id %}" class="btn btn-success">Update</a>
+                                <a href="{% url 'books:delete' book.id %}" class="btn btn-danger">Delete</a>
+                             </td>
+                             {% else %}
+                             <td>
+                               <form method="POST" action="{% url 'books:chooseshelf' book.id %}">
+                                 {% csrf_token %}
+                                 <input type="date" name="reserve_date" class="reserve_date" style="margin: 1%; padding: 1%;" required>
+                                 <button type="submit" class="btn btn-warning">Reserve</button>
+                               </form>
+                               
+                             </td>
+                             {% endif %}
+                            
+                             
+                         
+                         </tr>
+                         {% endfor %}
+          
+           </table>
+           {% if books.has_other_pages %}
+    <ul class="pagination">
+        {% if books.has_previous %}
+          <li><a href="?page={{ books.previous_page_number }}">«</a></li>
+        {% else %}
+          <li class="disabled"><span>«</span></li>
+  {% endif %}
+  {% for i in books.paginator.page_range %}
+   {% if books.number == i %}
+      <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+   {% else %}
+      <li><a href="?page={{ i }}">{{ i }}</a></li>
+   {% endif %}
+ {% endfor %}
+ 
+ {% if books.has_next %}
+   <li><a href="?page={{ books.next_page_number }}">»</a></li>
+ {% else %}
+   <li class="disabled"><span>»</span></li>
+ {% endif %}
+  </ul>
+{% endif %}
+         </div>
+         <!-- /.card-body -->
+       </div>
+
+   
+    {% endblock %}
+

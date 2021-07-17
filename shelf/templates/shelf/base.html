@@ -1,0 +1,307 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MyLibrary</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback'">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+  <link rel="stylesheet" href="{% static 'dist/css/adminlte.css' %}">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+  
+
+  <!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="{% static '/dist/img/logo.png' %}" alt="Mylibrarylogo" height="60" width="60">
+  </div>
+  
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="{% url 'shelf:dashboard' %}" class="nav-link">Home</a>
+      </li>
+     
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <!-- Navbar Search -->
+   
+      <li class="nav-item dropdown user user-menu">
+        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+          <img src="{% static 'dist/img/user.png' %}" class="user-image img-circle elevation-2" alt="User Image">
+          <span class="hidden-xs">{{user.first_name}} {{ user.last_name }}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <!-- User image -->
+          <li class="user-header bg-primary">
+            <img src="{% static 'dist/img/user.png' %}" class="img-circle elevation-2" alt="User Image">
+
+            <p>
+              {{ user.first_name }}
+            </p>
+          </li>
+          <!-- Menu Body -->
+     
+          <!-- Menu Footer-->
+          <li class="user-footer">
+            <div class="row">
+              
+               <div class="col-4 text-center">
+              <a href="{% url 'users:profile' %}" class="btn btn-primary btn-flat">Profile</a>
+              </div>
+            
+              {% if user.is_authenticated %}
+              <div class="text-center">
+                <a href="{% url 'users:logout' %}" class="btn btn-danger btn-flat">Logout</a>
+              </div>
+              {% else %}
+              <div class="text-center">
+                <a href="{% url 'users:logout' %}" class="btn btn-danger btn-flat">Login</a>
+              </div>
+              {% endif %}
+            </div>
+          </li>
+        </ul>
+      </li>
+     
+
+   
+    </ul>
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+   
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{% static 'dist/img/logo.png' %}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="{% url 'shelf:dashboard'  %}" class="d-block">Mylibrary</a>
+        </div>
+      </div>
+
+
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+               {% if user.is_superuser or user.is_admin %}
+               <li class="nav-item">
+                <a href="{% url 'users:create' %}" class="nav-link">
+                  <i class="nav-icon fas fa-user-plus"></i>
+                  <p>
+                   Register a student
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-copy"></i>
+                  <p>
+                   Shelf
+                    <i class="fas fa-angle-left right"></i>
+                    <span class="badge badge-info right"></span>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'shelf:index' %}" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Shelf</p>
+                    </a>
+                  </li>
+                 {% if user.is_admin or user.is_superuser %}
+                  <li class="nav-item">
+                    <a href="{% url 'shelf:create' %}" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Add Shelf</p>
+                    </a>
+                  </li>
+                 {% endif %}
+                 
+               
+             
+             
+              
+             
+             
+                </ul>
+              </li>
+              {% endif %}
+
+  
+      
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+               Books
+                <i class="fas fa-angle-left right"></i>
+                <span class="badge badge-info right"></span>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              
+              <li class="nav-item">
+                <a href="{% url 'books:index' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Books</p>
+                </a>
+              </li>
+              {% if user.is_admin or user.is_superuser %}
+              <li class="nav-item">
+                <a href="{% url 'books:create_books' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Add Books</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'books:reserved' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Reserved Books</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'books:issuebook' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Issue Book</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'books:issuedbooks' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Issued Books</p>
+                </a>
+              </li>
+             
+              {% else %}
+         
+              <li class="nav-item">
+                <a href="{% url 'users:reserved' user.id %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Reserved Books</p>
+                </a>
+              </li>
+          
+              <li class="nav-item">
+                <a href="{% url 'users:borrowed' user.id %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Borrowed Books</p>
+                </a>
+              </li>
+          {% endif %}
+         
+            </ul>
+          </li>
+          {% if user.is_admin %}
+          <li class="nav-item">
+            <a href="users.html" class="nav-link">
+              <i class="nav-icon fas fa-user"></i>
+              <p>
+                Users
+              </p>
+            </a>
+          </li>
+          {% endif %}
+          
+        
+        
+          
+      
+      
+        
+          
+         
+         
+          
+          
+         
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+ 
+  <div class="content-wrapper">
+
+  
+   {% block body %}
+
+
+
+
+   {% endblock %}
+
+    </div>
+  <!-- /.content-wrapper -->
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  <footer class="main-footer">
+    
+    
+    
+  </footer>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery -->
+
+
+
+
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+
+<script src="{% static 'dist/js/adminlte.js' %}"></script>
+<!-- AdminLTE for demo purposes -->
+<!-- <script src="{% static 'dist/js/demo.js' %}"></script> -->
+
+
+
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<!-- <script src="{% static 'dist/js/pages/dashboard.js' %}"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+{% extends 'shelf/base.html' %}
+  
+
+
+
+    
+   {% block body %} 
+
+   {% if messages %}
+
+
+
+  
+   {% for message in messages %}
+   
+   <div class="card-body">
+   <div class="alert alert-{{ message.tags }}" role="alert">
+     <strong>Message:</strong> {{ message }}
+     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+     </button>
+   </div>
+  </div>
+ 
+ 
+   
+     
+   {% endfor %}
+   
+ {% endif %}
+ 
+  
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>Shelf Details:</h1>
+            </div>
+            <div class="col">
+                
+
+            </div>
+        </div>
+        
+    </div>
+
+
+
+
+    <div class="card">
+        
+        <!-- /.card-header -->
+        <div class="card-body">
+          <a href="{% url 'shelf:create' %}" class="btn btn-warning float-right" style="margin-bottom: 10px;">Add Shelf</a>
+
+          
+          
+          <table id="example2" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              
+              <th>Action</th>
+    
+            </tr>
+            </thead>
+            <tbody>
+                {% for shelf in shelves %}
+                            <tr>
+                            <td>{{shelf.id}}</td>
+
+                            <td>{{shelf.shelf_name}}</td>
+                              
+                            
+                           
+                            <td>
+                                <a href="{% url 'shelf:detail' shelf.id %}" class="btn btn-primary">View</a>
+                                <a href="{% url 'shelf:delete' shelf.id %}" class="btn btn-danger">Delete</a>
+                                <a href="{% url 'shelf:update' shelf.id %}" class="btn btn-success">Edit</a></td>
+                               
+                        </tr>
+                        {% endfor %}
+                        
+          </table>
+          
+         
+      
+  {% if shelves.has_other_pages %}
+    <ul class="pagination">
+        {% if shelves.has_previous %}
+          <li><a href="?page={{ shelves.previous_page_number }}">«</a></li>
+        {% else %}
+          <li class="disabled"><span>«</span></li>
+  {% endif %}
+  {% for i in shelves.paginator.page_range %}
+   {% if shelves.number == i %}
+      <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+   {% else %}
+      <li><a href="?page={{ i }}">{{ i }}</a></li>
+   {% endif %}
+ {% endfor %}
+ 
+ {% if shelves.has_next %}
+   <li><a href="?page={{ shelves.next_page_number }}">»</a></li>
+ {% else %}
+   <li class="disabled"><span>»</span></li>
+ {% endif %}
+  </ul>
+{% endif %}
+        </div>
+        <!-- /.card-body -->
+      </div>
+
+      
+
+
+   {% endblock %}

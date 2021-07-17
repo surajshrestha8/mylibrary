@@ -1,0 +1,44 @@
+{% extends 'shelf/base.html' %}
+
+
+
+
+
+
+
+
+{% block body %}
+<div class="container" style="padding-top: 20px;">
+    <div class="row">
+        <div class="col-md-2">
+
+        </div>
+        <div class="col-md-8">
+        <div class="card card-primary card-header">
+          <p class="login-box-msg"> Choose Shelf</p>
+            
+              
+
+<form method="POST" action="{% url 'books:reserve' book.id %}">
+    {% csrf_token %}
+    <select class="form-control" name ='shelf' required>
+        
+        {% for r in register %}
+        <option  value="{{r.shelf_id}}">{{r.shelf.shelf_name}}</option>
+    
+    {% endfor %}
+</select>
+<input value="{{reserve_date}}" type="hidden" name="reserve_date">
+<hr>
+    <button type="submit" class="btn btn-warning">Reserve</button>
+</form>
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+
+{% endblock %}

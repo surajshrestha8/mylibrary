@@ -1,0 +1,85 @@
+{% extends 'shelf/base.html' %}
+
+
+
+
+
+
+{% block body %}
+
+
+
+
+        
+    <!-- /.card-header -->
+    <div class="card-body">
+        
+  <div class="row">
+    <div class="col-md-3">
+
+    </div>
+    <div class="col-md-6">
+    
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><h2>Fine Details</h2></li>
+          <li class="list-group-item">
+     
+      
+      
+      <table id="example2" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+          <th>Book</th>
+          <th>Fine</th>
+          
+
+        </tr>
+        </thead>
+        <tbody>
+            {% for f in fine %}
+                        <tr>
+                       
+                            <td>
+                                {{f.book.title}}
+                            </td>
+                            <td>
+                              Rs.{{f.amount}}
+                            </td>
+                       
+                        
+                          
+                    </tr>
+                    {% endfor %}
+                    
+      </table>
+      {% if total_amount %}
+      <h4 style="color:red">Total: Rs.{{total_amount}}</h4>
+      <a href="{% url 'users:pay' %}" class="btn btn-success">Pay Fine</a>
+      {% else %}
+      <p style="color: green;">You don't have any pending fine.</p>
+
+      {% endif %}
+
+    </li>
+   
+
+</div>
+</div>
+  
+
+    </div>
+    <!-- /.card-body -->
+  </div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+{% endblock %}

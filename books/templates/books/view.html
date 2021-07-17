@@ -1,0 +1,95 @@
+{% extends 'shelf/base.html' %}
+
+{% block body %}
+
+
+<section class="content" style="padding-top: 60px;">
+  <div class="container-fluid">
+    <div class="col-md-6">
+        <!-- Widget: user widget style 1 -->
+        <div class="card card-widget widget-user">
+          <!-- Add the bg color to the header using any of the bg-* classes -->
+          <div class="widget-user-header bg-info">
+            <h2 class="widget-user-username">{{book.title}}</h2>
+            
+            <h5 class="widget-user-desc">{{book.author}}</h5>
+          </div>
+         <!--  <div class="widget-user-image">
+            <img class="img-circle elevation-2" src="dist/img/user.png" alt="User Avatar">
+          </div>
+-->              <div class="card-footer">
+            <div class="row">
+              <div class="col-sm-4 border-right">
+                <div class="description-block">
+                  <h5 class="description-header">Total</h5>
+                  <hr>
+                  <span class="description-text">{{registers}}</span>
+                </div>
+                <!-- /.description-block -->
+              </div>
+              <!-- /.col -->
+
+              <div class="col-sm-4 border-right">
+                <div class="description-block">
+                  <h5 class="description-header">Shelves</h5>
+                  <hr>
+                  {% for shelf in shelves %}
+                  <span class="description-text">{{shelf.shelf.shelf_name}}</span></br>
+
+                  {% endfor %}
+                 
+                </div>
+                <!-- /.description-block -->
+              </div>
+              <!-- /.col -->
+
+               <div class="col-sm-4 border-right">
+                <div class="description-block">
+                  <h5 class="description-header">Available</h5>
+
+                  <hr>
+                  {% for shelf in shelves %}
+                  <span class="description-text">{{shelf.number_of_copies}}</span>
+                  <br>
+                  {% endfor %}
+                </div>
+                <!-- /.description-block -->
+              </div>
+              <!-- /.col -->
+
+              <div class="col-sm-4 border-right">
+               <!--  <div class="description-block">
+                <a href="#" class="btn btn-warning btn-flat">Reserve Book</a>
+                </div>
+        
+              </div>
+              
+            
+            </div>
+            <!-- /.row -->
+          </div>
+        </div>
+        <!-- /.widget-user -->
+      </div>
+          
+          
+     
+
+  </div><!-- /.container-fluid -->
+
+    
+  </section>
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+

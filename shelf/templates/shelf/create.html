@@ -1,0 +1,98 @@
+{% extends 'shelf/base.html' %}
+    
+
+{% block body %}
+<div class="container" style="padding-top: 20px;">
+    <div class="row">
+        <div class="col-md-2">
+
+        </div>
+        <div class="col-md-8">
+        <div class="card card-primary card-header">
+          <p class="login-box-msg"> Add a shelf</p>
+            
+              
+              
+
+  
+
+        
+            
+                    <form action="{% url 'shelf:create' %}"  method="POST" onsubmit="event.preventDefault(); check();" name="shelfform">
+                    
+                    {% csrf_token %}
+
+
+                    <span id="first_error" style="font-size:12px;color: red;"></span>
+                    <div class="input-group mb-3">
+                   <input type="text" name="shelf_name" id="shelf_name" class="form-control" placeholder="Name of the shelf" required>
+                   
+                     
+                    </div>
+                  
+                    
+                    <button type="submit"  class="btn btn-primary" >Create</button>
+                  </form>
+                
+            </div>
+            
+    
+        
+                  
+    
+        </div>
+    </div>
+    </div>
+    </div>
+    
+    <script>
+      const button = document.getElementById("button_test");
+     
+     function check(){
+         
+         
+        
+         var firstName = document.getElementById('shelf_name').value;
+     
+         var regCapital = /^[A-Z]/;
+         var regSpace = /^(\w+\s?)*\s*$/g;
+         var regMoreCap = /\w*[A-Z]\w*[A-Z]\w*/;
+         var regEmail = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+     
+     // --------------------------- FIRST NAME VALIDATION -------------------------------------------------
+         // validation firstname for characters
+         if (typeof firstName !== "string" ||/[!\@\#\$\%\^\&\*0-9]+/.test(firstName))
+           {
+             document.getElementById('first_error').innerHTML = "Firstname must contain only characters.";
+             firstName.focus();
+           }
+     
+         // validation firstname for capital letter on first character
+         if (regCapital.test(firstName)==false)
+         {
+           document.getElementById('first_error').innerHTML = "First character must be in uppercase";
+           firstName.focus();
+         }
+     
+         // checking if first name has more than one character
+         if (regMoreCap.test(firstName))
+         {
+           document.getElementById('first_error').innerHTML = "Only the first character can be in uppercase";
+           firstName.focus();
+         }
+         else{
+           document.shelfform.submit();
+         }
+     };
+     
+     
+         </script>
+          
+    {% endblock %}
+
+
+
+
+
+
+

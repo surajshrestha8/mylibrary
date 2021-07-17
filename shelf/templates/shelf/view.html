@@ -1,0 +1,74 @@
+{% extends 'shelf/base.html' %}
+{% block body %}
+
+<div class="card-body">
+
+
+  <div class="row">
+    <div class="col-md-3">
+
+    </div>
+    <div class="col-md-6">
+    
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><h2>{{shelf.shelf_name}}</h2></li>
+          
+         
+          <li class="list-group-item">
+            <table id="" class="table table-bordered table-hover">
+              <thead>
+                <tr>  
+                  <th>Books</th>
+                  <th> Number of books:</th>
+                  <th>Action</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                {% for book in books %}
+                <tr>
+                  <td>
+                                      
+                    
+                      
+                     {{book.book.title}}
+                  
+            
+                    
+
+                  </td>
+                  <td>
+                   
+                      {{book.number_of_copies}} 
+                     
+                      
+                      
+                  </td>
+                  <td>
+                    <a href="{% url 'shelf:registerupdate' book.id %}" class="btn btn-success">Edit</a>
+                    <a href="{% url 'shelf:registerdelete' book.id %}" class="btn btn-danger">Delete </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            
+
+              </table>
+      
+          </li>
+
+         <li class="list-group-item">Total Books: {{registers}}</li>
+        </ul>
+     
+   
+    </div>
+    
+  
+  </div>
+
+</div>
+</div>
+
+  
+{% endblock %}
+

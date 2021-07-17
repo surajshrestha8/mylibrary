@@ -1,0 +1,36 @@
+{% extends 'shelf/base.html' %}
+
+{% block body %}
+
+<div class="card">
+        
+    <!-- /.card-header -->
+    <div class="card-body">
+      <table id="example2" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+          <th>Username</th>
+          <th>Name </th>
+          
+          <th>Faculty</th>
+          <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+                        <tr>
+                        <td>{{student.user.username}}</td>
+                        <td>{{student.user.first_name}} {{student.user.last_name}}</td>
+                        <td> {{ student.faculty}}</td> 
+                        <td> {{student.user.email}}</td>
+                    </tr>
+                    {% endfor %}
+     
+      </table>
+    </div>
+    <!-- /.card-body -->
+  </div>
+
+
+{% endblock %}
+

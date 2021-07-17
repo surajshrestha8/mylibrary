@@ -1,0 +1,47 @@
+{% extends 'shelf/base.html' %}
+
+
+
+<style>
+    #esewaform{
+        display: none;
+    }
+</style>
+
+
+
+{% block body %}
+
+
+<body>
+    <form action="https://uat.esewa.com.np/epay/main" method="POST" class="esewaform" id="esewaform">
+    <input value="{{total_amount}}" name="tAmt" type="text">
+    <input value="{{total_amount}}" name="amt" type="text">
+    <input value="0" name="txAmt" type="hidden">
+    <input value="0" name="psc" type="hidden">
+    <input value="0" name="pdc" type="hidden">
+    <input value="EPAYTEST" name="scd" type="text">
+    <input value="{{secret_id}}_{{student_id}}" name="pid" type="text">
+    <input value="http://127.0.0.1:8000/users/verify" type="text" name="su">
+    <input value="{{request.build_absolute_uri}}" type="text" name="fu">
+    <input value="Submit" type="submit">
+    </form>
+</body>
+<script>
+    setTimeout(function(){
+        document.getElementById("esewaform").submit()
+    }, 500)
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
