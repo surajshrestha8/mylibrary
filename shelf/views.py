@@ -10,6 +10,7 @@ from django.db.models import Sum
 from users.models import Student
 from django.contrib import messages
 from django.core.paginator import Paginator,EmptyPage
+from users.decorators import allowed_users
 
 
 # Create your views here.
@@ -34,6 +35,7 @@ def dashboard(request):
 
     return render(request,'shelf/dashboard.html',context)
 
+@allowed_users(allowed_roles=['librarian'])
 def index(request):
     shelves = Shelf.objects.all()  #retrieve all created shelves
     p = Paginator(shelves,5)
@@ -51,6 +53,7 @@ def index(request):
     }
     return render(request,'shelf/index.html',context)
 
+@allowed_users(allowed_roles=['librarian'])
 def create(request):
    
        
@@ -66,6 +69,7 @@ def create(request):
 
         return render(request,'shelf/create.html')
 
+@allowed_users(allowed_roles=['librarian'])
 def detail(request,shelf_id):
     shelf = Shelf.objects.get(id= shelf_id)
     books = Register.objects.filter(shelf_id=shelf_id)
@@ -83,7 +87,7 @@ def detail(request,shelf_id):
     return render(request,'shelf/view.html',context)
 
     
-
+@allowed_users(allowed_roles=['librarian'])
 def update(request, shelf_id):
     old_shelf = get_object_or_404(Shelf,id = shelf_id)
     if request.method == 'POST':
@@ -101,7 +105,7 @@ def update(request, shelf_id):
         }
         return render(request,'shelf/update.html',context)  
 
-
+@allowed_users(allowed_roles=['librarian'])
 def destroy(request,shelf_id):
     shelf=Shelf.objects.get(pk= shelf_id)
     borrower = Borrower.objects.filter(shelf_id = shelf_id).count()
@@ -115,7 +119,7 @@ def destroy(request,shelf_id):
         messages.success(request,'The shelf was deleted successfully')
         return redirect('shelf:index')
 
-
+@allowed_users(allowed_roles=['librarian'])
 def register_update(request,register_id):
     register = Register.objects.get(id = register_id)
     
@@ -124,11 +128,11 @@ def register_update(request,register_id):
         register.number_of_copies = number_of_copies
         register.save()
         messages.success(request,'Number of copies updated successfully')
-        return redirect('/')
+        return redirect('shelf:index')
     
     return render(request,'shelf/registerupdate.html',{'register':register})
 
-
+@allowed_users(allowed_roles=['librarian'])
 def register_delete(request,register_id):
 
     register = Register.objects.get(id = register_id)

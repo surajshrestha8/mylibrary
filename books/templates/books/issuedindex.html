@@ -28,7 +28,7 @@
       <div class="col-md-2 mb-2">
        
         <select class="form-control" name="book" id="book">
-          <option selected >Choose a shelf</option>
+          <option selected >Choose a book</option>
           {% for book  in books %}
           <option value="{{book.id}}">{{book.title}}</option>
           {% endfor %}
@@ -156,7 +156,7 @@
         });
         
         if(id.length===0){
-          $('.errordeposit').html("Please select at least one book")
+          alert('Please select atleast one book')
         }
 
 

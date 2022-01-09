@@ -64,7 +64,7 @@
             <div class="row">
               
                <div class="col-4 text-center">
-              <a href="{% url 'users:profile' %}" class="btn btn-primary btn-flat">Profile</a>
+              <a href="#" class="btn btn-primary btn-flat">Profile</a>
               </div>
             
               {% if user.is_authenticated %}
@@ -73,7 +73,7 @@
               </div>
               {% else %}
               <div class="text-center">
-                <a href="{% url 'users:logout' %}" class="btn btn-danger btn-flat">Login</a>
+                <a href="{% url 'users:loging' %}" class="btn btn-danger btn-flat">Login</a>
               </div>
               {% endif %}
             </div>

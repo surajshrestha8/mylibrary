@@ -16,9 +16,10 @@ from django.contrib import messages
 from django.utils.timezone import datetime, timedelta ,timezone
 from django.core.mail import send_mail ,send_mass_mail
 from .filters import BookFilter, StudentFilter
+from users.decorators import allowed_users
 
 # Create your views here.
-
+@login_required(login_url='users:login')
 # to retrive all the books in the library
 def index(request):
     books = Book.objects.all()
@@ -43,7 +44,8 @@ def index(request):
 
 
 #function to create new books and keeping them into various shelves
-
+@login_required(login_url='users:login')
+@allowed_users(allowed_roles=['librarian'])
 def create(request):                       
     
     shelves = Shelf.objects.all() #retrieve all shelf objects 
@@ -81,7 +83,7 @@ def create(request):
                 r.save()
                 
 
-                messages.success(request,'Book added successfully')
+            messages.success(request,'Book added successfully')
             
             
             return redirect('books:index')
@@ -97,6 +99,7 @@ def create(request):
 
 # to view the information about an individual book
 
+@login_required(login_url='users:login')
 def detail(request,book_id):
     book = Book.objects.get(id=book_id)
     shelves = Register.objects.filter(book_id=book_id)
@@ -110,8 +113,9 @@ def detail(request,book_id):
     }
     return render(request,'books/view.html',context)
 
-
+@login_required(login_url='users:login')
 # to update the information about a book
+@allowed_users(allowed_roles=['librarian'])
 def update(request,book_id):
     old_book = get_object_or_404(Book,id = book_id)
     if request.method =='POST':
@@ -119,6 +123,7 @@ def update(request,book_id):
         form = UpdateBook(request.POST or None, instance=old_book)
         if form.is_valid():
             form.save()
+            messages.success(request,'Book information updated successfully')
             return redirect('books:index')
         else:
             messages.warning(request,'Invalid data entered')
@@ -128,8 +133,9 @@ def update(request,book_id):
 
         return render(request,'books/books_update.html',{'form':form})
 
-
+@login_required(login_url='users:login')
 # to delete a book
+@allowed_users(allowed_roles=['librarian'])
 def delete(request,book_id):
     book = Book.objects.get(id = book_id)
     borrower = Borrower.objects.filter(book_id = book_id, is_deposited = False).count()
@@ -160,7 +166,7 @@ def choose_shelf(request,book_id):
     else:
         
         return render(request,'books/chooseshelf.html',{'register':register,'book':book,'reserve_date':reserve_date})
-
+@login_required(login_url='users:login')
 # to reserve a particular book 
 def reserve_book(request,book_id):
    
@@ -203,7 +209,8 @@ def reserve_book(request,book_id):
                     return redirect('books:index')
        
 
-
+@login_required(login_url='users:login')
+@allowed_users(allowed_roles=['librarian'])
 def reserved_books(request):
     
     books = Reservation.objects.filter(reserved_date__gte = datetime.today())
@@ -212,21 +219,30 @@ def reserved_books(request):
     }
     return render(request,'books/reserved.html',context)
 
+@login_required(login_url='users:login')
+@allowed_users(allowed_roles=['librarian'])
 def issuebook(request,book_id):
     book = Reservation.objects.get(id = book_id)
     register = Register.objects.get(book_id = book.reserved_book_id,shelf_id = book.shelf_id)
-
+    student  = Student.objects.get(id = book.reserved_by_id)
+    print(student.reserved_books)
+    print(student.total_books_due)
     borrower = Borrower()
     borrower.book_id = book.reserved_book_id
 
     borrower.student_id = book.reserved_by_id
+   
     borrower.shelf_id  = book.shelf_id
     borrower.issue_date = datetime.today()
     borrower.return_date = borrower.issue_date + timedelta(16)
     borrower.issued_by_id = request.user.id
     borrower.is_deposited = False
     borrower.save()
+    student.reserved_books = student.reserved_books - 1
+    student.total_books_due = student.total_books_due + 1
+    
     register.number_of_copies = register.number_of_copies - 1
+    student.save()
     register.save()
     book.delete()
     messages.success(request,'Book issued successfully')
@@ -236,6 +252,7 @@ def issuebook(request,book_id):
 
 
 @login_required(login_url='users:login')
+@allowed_users(allowed_roles=['librarian'])
 def issue(request):
     books = Book.objects.all()
     students = Student.objects.all()
@@ -317,12 +334,12 @@ def check_books(request):
     student_id = request.GET.get('student_username')
     final_student_id = int(student_id)
     student = Student.objects.get(id = final_student_id)
-    check_fine = Fine.objects.filter(student_id = student.id).count()
+    check_fine = Fine.objects.filter(student_id = student.id,is_paid = False).count()
     print(check_fine)
     
     return JsonResponse(student.total_books_due,safe=False)
 
-
+@login_required(login_url='users:login')
 def showbooks(request):
     students = Student.objects.all()
     books = Book.objects.all()
@@ -342,43 +359,49 @@ def showbooks(request):
     return render(request,'books/issuedindex.html',{'issuedbooks':page,'student_filter':student_filter,'students':students,'books':books})
 
 
-
+@login_required(login_url='users:login')
+@allowed_users(allowed_roles=['librarian'])
 def depositbooks(request):
     if request.method == 'POST':
         books = request.POST.getlist('id[]')
+        if books: 
+            for i in books:
+                borrower = Borrower.objects.get(id= i)
+                student = Student.objects.get(id = borrower.student.id)
+                book = borrower.book.id
+                shelf = borrower.shelf.id
+                register = Register.objects.get(book_id = book, shelf_id = shelf)
+                today = datetime.now(timezone.utc)
+                difference  = today - borrower.return_date
+
+                amount = 1
+
+                if difference.days > 0:
+                    if difference.days > 5:
+                        amount = amount*difference.days
+                        fine = Fine(student = borrower.student, book = borrower.book, amount = amount, is_paid = False)
+                        email_user = [borrower.student.user.email]
+                        send_mail('Fine Alert','You have been charged','majorproject080@gmail.com',email_user,fail_silently=False)
+                        fine.save()
+
+
+                register.number_of_copies = register.number_of_copies + 1
+                student.total_books_due = student.total_books_due - 1
+                
+                borrower.is_deposited = True
+                register.save()
+                student.save()
+                borrower.save()
         
-        for i in books:
-            borrower = Borrower.objects.get(id= i)
-            student = Student.objects.get(id = borrower.student.id)
-            book = borrower.book.id
-            shelf = borrower.shelf.id
-            register = Register.objects.get(book_id = book, shelf_id = shelf)
-            today = datetime.now(timezone.utc)
-            difference  = today - borrower.return_date
+        
+            messages.success(request,"Books deposited successfully")        
+            return redirect('books:issuedbooks')   
+        else:
+            messages.warning(request,'Please select at least one book to deposit')
+            return redirect('books:issuedbooks')      
 
-            amount = 1
-
-            if difference.days > 0:
-                if difference.days > 5:
-                    amount = amount*difference.days
-                    fine = Fine(student = borrower.student, book = borrower.book, amount = amount, is_paid = False)
-                    email_user = [borrower.student.user.email]
-                    send_mail('Fine Alert','You have been charged','majorproject080@gmail.com',email_user,fail_silently=False)
-                    fine.save()
-
-
-            register.number_of_copies = register.number_of_copies + 1
-            student.total_books_due = student.total_books_due - 1
-            
-            borrower.is_deposited = True
-            register.save()
-            student.save()
-            borrower.save()
-    
-    
-    messages.success(request,"Books deposited successfully")        
-    return redirect('books:issuedbooks')         
-
+@login_required(login_url='users:login')
+@allowed_users(allowed_roles=['librarian'])
 def send_message(request):
     today  = datetime.today()
     end_date = today + timedelta(5)
@@ -390,13 +413,16 @@ def send_message(request):
         
         
     )
+    if pending_deposit:
     
-    for i in pending_deposit:
-    
-        email_user = [i.student.user.email]
-        send_mail('Alert','Please return your books in time','majorproject080@gmail.com',email_user)
+        for i in pending_deposit:
         
-    messages.success(request,'Mail sent successfully')
-    return redirect('shelf:dashboard')
-    
-    
+            email_user = [i.student.user.email]
+            send_mail('Alert','Please return your books in time','majorproject080@gmail.com',email_user)
+            
+        messages.success(request,'Mail sent successfully')
+        return redirect('shelf:dashboard')
+        
+    else:
+        messages.warning(request,'No such records found')
+        return redirect('shelf:dashboard')

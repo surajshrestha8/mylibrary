@@ -1,4 +1,5 @@
 from typing import ContextManager
+from users.decorators import allowed_users
 from django import forms
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
@@ -22,7 +23,9 @@ from django.contrib.auth.decorators import login_required ,permission_required
 from django.contrib.auth.forms import AuthenticationForm,PasswordChangeForm
 from django.contrib.auth import login,authenticate, logout, update_session_auth_hash
 # Create your views here.
+
 @login_required(login_url='users:login')
+
 def profile(request):
 
     student_id = request.user.student.id
@@ -38,6 +41,7 @@ def profile(request):
     return render(request,'students/profile.html',context)
 
 @login_required(login_url='users:login')
+@allowed_users(allowed_roles=['librarian'])
 def create(request):
     
         form = StudentCreateForm(request.POST or None)
@@ -57,7 +61,7 @@ def create(request):
                     Password:  """ + password1
             
             student.save()
-            send_mail('Library Account created!',message_to_student,'surajshre348@gmail.com',email_user,fail_silently=False)
+            send_mail('Library Account created!',message_to_student,'majorproject080@gmail.com',email_user,fail_silently=False)
             messages.success(request,'Profile created successfully')
             return redirect('users:login')
         
@@ -118,6 +122,7 @@ def index(request):
     students = Student.objects.all()
     return render(request,'students/index.html',{'students':students})
 
+@login_required(login_url='users:login')
 def reserved_books(request,user_id):
    
     
@@ -129,7 +134,6 @@ def reserved_books(request,user_id):
     }
     
     return render(request,'students/reservedbooks.html',context)
-
 
 
 def cancel_reservation(request,book_id):
@@ -206,7 +210,9 @@ def verify(request):
     print(root)
     status = root[0].text.strip()
     print(status)
-    student = (oid[-2:])
+    student = (oid[-1:])
+    print(type(student))
+    
     s = int(student)
     print(type(s))
     email_user = [request.user.email]
@@ -215,9 +221,9 @@ def verify(request):
         for f in fine:
             f.is_paid = True
             f.save()
-    send_mail('Fine cleared','Thank you for paying your fine.Now you can reserve or borrow books from the library.','surajshre348@gmail.com',email_user,fail_silently=False)
+    send_mail('Fine cleared','Thank you for paying your fine.Now you can reserve or borrow books from the library.','majorproject080@gmail.com',email_user,fail_silently=False)
     messages.success(request,'Your fine has been paid successfully')
-    return redirect('/')
+    return redirect('users:dashboard')
 
 
 
